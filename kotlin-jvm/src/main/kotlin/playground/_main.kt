@@ -11,6 +11,8 @@ fun main() {
     println()
     playground.okhttp.main()
     println()
+    playground.kodein.db.main()
+    println()
 }
 
 infix fun <T: Any?> T.shouldBe(expected: T) {

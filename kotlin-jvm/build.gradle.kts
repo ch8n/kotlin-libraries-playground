@@ -14,6 +14,7 @@ repositories {
     google()
     jcenter()
     maven(url = "https://dl.bintray.com/kotlin/kotlin-eap/")
+    maven(url = "https://dl.bintray.com/kodein-framework/Kodein-DB")
 }
 // File build.gradle.kts
 dependencies {
@@ -35,6 +36,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
     implementation(KotlinX.serialization.properties)
 
+    testImplementation(Testing.junit.params)
     testImplementation(Testing.kotest.runner.junit5)
     testImplementation(Testing.kotest.property)
     testImplementation(Testing.kotest.assertions.core)
@@ -49,6 +51,14 @@ dependencies {
     testImplementation(Testing.spek.runtime.jvm)
     testImplementation(Testing.strikt.core)
     testImplementation(Testing.strikt.arrow)
+
+
+    // Kodein-DB
+    implementation("org.kodein.db:kodein-db-jvm:_")
+    implementation("org.kodein.db:kodein-db-serializer-kotlinx:_")
+    //implementation( "org.kodein.db:kodein-leveldb-jni-linux:_")
+    implementation( "org.kodein.db:kodein-leveldb-jni:_")
+    //implementation( "org.kodein.db:kodein-leveldb-jni-windows:_")
 }
 
 tasks.withType<Test> {
