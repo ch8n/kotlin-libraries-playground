@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
  * - [Author](https://chetangupta.net)
  */
 fun main() {
-
+    println()
     println("# Manual dependency injection, written purely using Kotlin")
 
     val viewModel = Injector.viewModel
