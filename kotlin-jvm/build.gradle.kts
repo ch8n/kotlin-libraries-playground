@@ -16,6 +16,9 @@ repositories {
     jcenter()
     maven(url = "https://dl.bintray.com/kotlin/kotlin-eap/")
     maven("https://kotlin.bintray.com/kotlinx/")
+    // arrowKt
+    maven(url = "https://dl.bintray.com/arrow-kt/arrow-kt/")
+    maven(url = "https://oss.jfrog.org/artifactory/oss-snapshot-local/")
 }
 
 sqldelight {
@@ -29,7 +32,7 @@ sqldelight {
 dependencies {
 
     // Keep dependencies sorted to minimize merge conflicts on pull-requests!
-    implementation ("com.github.ajalt:mordant:_")
+    implementation("com.github.ajalt:mordant:_")
     implementation("com.github.ajalt.clikt:clikt:_")
     implementation("com.github.ajalt.clikt:clikt:_")
     implementation("com.h2database:h2:_")
@@ -51,6 +54,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:_")
     implementation("org.kodein.di:kodein-di:_")
     implementation("org.koin:koin-core:_")
+    implementation("io.arrow-kt:arrow-core:_")
+    implementation("io.arrow-kt:arrow-syntax:_")
     // Keep dependencies sorted to minimize merge conflicts on pull-requests!
     implementation(JakeWharton.retrofit2.converter.kotlinxSerialization)
     implementation(Kotlin.stdlib.jdk8)
@@ -74,6 +79,7 @@ dependencies {
     implementation(Square.retrofit2.retrofit)
     // Keep dependencies sorted to minimize merge conflicts on pull-requests!
     kapt(Square.moshi.kotlinCodegen)
+    kapt("io.arrow-kt:arrow-meta:_")
     // Keep dependencies sorted to minimize merge conflicts on pull-requests!
     testImplementation(Testing.junit)
     testImplementation(Testing.junit.params)
@@ -115,7 +121,7 @@ tasks.register("runOnGitHub") {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.freeCompilerArgs = listOf(
-            "-Xopt-in=kotlin.RequiresOptIn"
+        "-Xopt-in=kotlin.RequiresOptIn"
     )
 }
 
