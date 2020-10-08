@@ -3,8 +3,7 @@
 package playground.arrowkt
 
 import arrow.core.*
-import arrow.core.extensions.option.monad.map
-import arrow.core.extensions.option.semigroupal.times
+import java.lang.NumberFormatException
 
 /**
  * Manual Dependency Injection: Pure Kotlin, no framework required Dependency Injection
@@ -29,21 +28,83 @@ fun main() {
  * Either is used to short-circuit a computation upon the first error
  * Either is right-biased, i.e right contains the value and left contains error
  */
-
 object EitherDemo {
     fun demo() {
         println("# --- ArrowKt-Either-type-examples ---")
-        creation()
+        correctValue()
+        errorValue()
+        usingEitherForExceptionHandling()
+        generalOperationOnEither()
+        defaultValueHandling()
+        conditionalValue()
     }
 
-    fun creation() {
-        println("# Either creation sample")
+    fun correctValue() {
+        println("# Either example 1")
         val someValue: Either</*errorMsg*/String,/*value*/String> = Either.right("Sample value")
         val newValue = someValue.flatMap {
-            val mutation =StringBuilder().append(it).append("***").append(it).toString()
+            val mutation = StringBuilder().append(it).append("***").append(it).toString()
             Either.right(mutation)
         }
-        println("initValue : $someValue \nAfter transformation: $newValue")
+        println("initValue : $someValue \nAfter transformation: ${newValue.right()}")
+    }
+
+    fun errorValue() {
+        println("# Either example 2")
+        // if something is set left then perform action on the rightly value will result in nothing
+        val left: Either<String, Int> = Either.Left("Something went wrong")
+        val value = left.flatMap { Either.Right(it + 1) }
+        println("initValue : $left \nAfter transformation: $value")
+    }
+
+    fun usingEitherForExceptionHandling() {
+        println("# You can use Either for ExceptionHandling")
+        val somevalue = "xyz"
+        val someAction = somevalue.toIntOrNull()
+        val result = if (someAction == null) {
+            Either.Left(NumberFormatException("not a number"));
+        } else {
+            Either.Right(someAction)
+        }
+        println("initValue : $somevalue \nAfter transformation: $result")
+    }
+
+    fun generalOperationOnEither() {
+        println("# General Either operation examples")
+
+        println("# swap left & right")
+        val someValue: Either</*errorMsg*/String,/*value*/String> = Either.right("Sample value")
+        val result = someValue.swap()
+        println("init value : $someValue \nafterSwap: $result ")
+
+        println("# check if right have some value")
+        val containsSample = someValue.contains("Sample value")
+        println("init value : $someValue \ncontains?: $containsSample ")
+    }
+
+    fun defaultValueHandling() {
+        println("# handling for default values")
+        val someValue = "hello".left()
+        val result1 = someValue.getOrElse { "world" }
+        println("init value : $someValue \ndefaultValue: $result1 ")
+
+        println("# handling for Error values")
+        val result2 = someValue.getOrHandle { "world" }
+        println("init value : $someValue \nerrorValue: $result2 ")
+
+        println("# default values : ")
+        12.right().getOrElse { 17 }.also(::println) // Result: 12
+        12.left().getOrElse { 17 }.also(::println)  // Result: 17
+        println("# Error values : ")
+        12.right().getOrHandle { 17 }.also(::println) // Result: 12
+        12.left().getOrHandle { it + 5 }.also(::println) // Result: 17
+    }
+
+    fun conditionalValue() {
+        println("# Assign right value based on condition")
+        val someValue1 = Either.conditionally(true/*apply value to right*/, { "Error" }, { 42 })
+        val someValue2 = Either.conditionally(false/*apply value to left*/, { "Error" }, { 42 })
+        println("$someValue1 : $someValue2")
     }
 }
 
