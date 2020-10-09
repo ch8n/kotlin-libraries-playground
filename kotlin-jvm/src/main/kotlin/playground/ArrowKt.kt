@@ -20,8 +20,32 @@ fun main() {
     OptionDemo.demo()
     println()
     EitherDemo.demo()
+    println()
+    ValidateDemo.demo()
 
 }
+
+/**
+ *  used for having all errors reported simultaneously.
+ * **/
+object ValidateDemo {
+    fun demo() {
+        creation()
+    }
+
+    fun creation() {
+        open class Errors {}
+        class NumberFormatError : Errors()
+        class IllegalValueError : Errors()
+
+        val result1: Validated</*Errors*/Errors,/*value*/String> = IllegalValueError().invalid()
+        println(" is valid? ${result1.isValid}, ${result1} ")
+        val result2: Validated</*Errors*/Errors,/*value*/String> = "pokemon".valid()
+        println(" is valid? ${result2.isValid}, ${result2} ")
+    }
+
+}
+
 
 /**
  * Wrapper for writing functions that can fail

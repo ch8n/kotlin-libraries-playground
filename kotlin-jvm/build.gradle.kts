@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
     kotlin("plugin.serialization")
     id("com.squareup.sqldelight")
+    id("com.apollographql.apollo")
 }
 
 group = "playground"
@@ -31,14 +32,18 @@ sqldelight {
 dependencies {
 
     // Keep dependencies sorted to minimize merge conflicts on pull-requests!
-    implementation("com.github.ajalt:mordant:_")
+    implementation("com.beust:klaxon:_")
+    implementation ("com.github.ajalt:mordant:_")
     implementation("com.github.ajalt.clikt:clikt:_")
     implementation("com.github.ajalt.clikt:clikt:_")
     implementation("com.h2database:h2:_")
     implementation("com.h2database:h2:_")
     implementation("com.squareup.moshi:moshi:_")
     implementation("com.squareup.sqldelight:sqlite-driver:_")
+    implementation("com.uchuhimo:konf:_")
     implementation("io.github.serpro69:kotlin-faker:_")
+    implementation("com.apollographql.apollo:apollo-runtime:_")
+    implementation("com.apollographql.apollo:apollo-coroutines-support:_")
     implementation("org.jetbrains.exposed:exposed-core:_")
     implementation("org.jetbrains.exposed:exposed-core:_")
     implementation("org.jetbrains.exposed:exposed-dao:_")
@@ -131,4 +136,8 @@ tasks.withType(JavaExec::class.java) {
 tasks.register<DefaultTask>("hello") {
     group = "Custom"
     description = "Minimal task that do nothing. Useful to debug a failing build"
+}
+
+apollo {
+    generateKotlinModels.set(true)
 }

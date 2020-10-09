@@ -4,12 +4,15 @@ fun main() {
     /**
      * Keep the list sorted to minimize merge conflicts on pull-requests!
      */
+    playground.apollo.main()
     playground.clikt.main(arrayOf("--language", "FR", "--greeting", "Bonjour"))
     playground.clikt.main(arrayOf())
     playground.di.kodein.main()
     playground.di.koin.main()
     playground.di.manual.main()
     playground.exposed.main()
+    playground.klaxon.main()
+    playground.konf.main()
     playground.kotlinfaker.main()
     playground.kotlinpoet.main()
     playground.kotlinx.collections.immutable.main()
