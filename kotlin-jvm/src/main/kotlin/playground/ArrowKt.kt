@@ -3,6 +3,7 @@
 package playground.arrowkt
 
 import arrow.core.*
+import arrow.core.extensions.validated.foldable.get
 import java.lang.NumberFormatException
 
 /**
@@ -21,9 +22,56 @@ fun main() {
     println()
     EitherDemo.demo()
     println()
-    ValidateDemo.demo()
+    /*wip*/ ValidateDemo.demo()
+    println()
+    NonEmptyListDemo.demo()
+    println()
+}
+
+/***
+ * ListK wraps over the platform `List` datatype
+ */
+object ListDemo{
 
 }
+
+/**
+ * Data type of ordered lists that have at least one value
+ */
+object NonEmptyListDemo {
+    fun demo() {
+        println("# --- ArrowKt-NonEmptyList-type-examples ---")
+        creation()
+        operations()
+    }
+
+    fun creation() {
+        println("# Creating a  non-empty list")
+        val listOfItems = NonEmptyList.of(1, 3, 4, 6, 2)
+        // val listEmpty = NonEmptyList.of() <== wont compile
+        println(listOfItems)
+    }
+
+    fun operations() {
+        println("# basic operations of non-empty list")
+        val listOfItems = NonEmptyList.of(1, 3, 4, 6, 2)
+        println("head of list : ${listOfItems.head}")
+
+        val sumOfItems = listOfItems.foldLeft(0) { acc, item -> acc + item }
+        println("sum by reducing the list : ${sumOfItems}")
+
+        val twiced = listOfItems.map { item -> item * 2 }
+        println("twised the item using mao on list : $twiced")
+
+        val strangerThings = twiced.flatMap { twiceItem ->
+            listOfItems.map { listItem->
+                    listItem - twiceItem
+            }
+        }
+        println("flatmap action $strangerThings")
+    }
+}
+
 
 /**
  *  used for having all errors reported simultaneously.
@@ -31,17 +79,47 @@ fun main() {
 object ValidateDemo {
     fun demo() {
         creation()
+        validatedSupportWhen()
+        defaultValue()
+        getAllErrors()
     }
 
-    fun creation() {
-        open class Errors {}
-        class NumberFormatError : Errors()
-        class IllegalValueError : Errors()
+    sealed class Errors {
+        object OddNumberError : Errors()
+        object NotIntegerError : Errors()
+    }
 
-        val result1: Validated</*Errors*/Errors,/*value*/String> = IllegalValueError().invalid()
-        println(" is valid? ${result1.isValid}, ${result1} ")
-        val result2: Validated</*Errors*/Errors,/*value*/String> = "pokemon".valid()
-        println(" is valid? ${result2.isValid}, ${result2} ")
+
+    fun creation() {
+        val resultError: Validated<Errors, Int> = Invalid(Errors.OddNumberError)
+        print(resultError)
+
+        val resultSuccess: Validated<Errors, Int> = Valid(2)
+        print(resultSuccess)
+    }
+
+    fun validatedSupportWhen() {
+        val resultSuccess: Validated<Errors, Int> = Valid(2)
+        val output = when (resultSuccess) {
+            is Validated.Valid -> resultSuccess.a
+            is Validated.Invalid -> 0
+        }
+        println(output)
+    }
+
+    fun defaultValue() {
+        val resultError: Validated<Errors, Int> = Invalid(Errors.OddNumberError)
+        println(resultError.getOrElse { 0 })
+    }
+
+    fun getAllErrors() {
+        println("# === list of errors ===")
+        val resultError: Validated<Errors, Int> = Invalid(Errors.OddNumberError)
+        val output = resultError.fold(
+            /*accumlate errors*/ { Validated.Invalid(NonEmptyList(it, listOf())) },
+            /*accumlate valid*/{ Valid(0) }
+        )
+        println(output)
     }
 
 }
