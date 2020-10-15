@@ -3,7 +3,6 @@
 package playground.arrowkt
 
 import arrow.core.*
-import arrow.core.extensions.validated.foldable.get
 import java.lang.NumberFormatException
 
 /**
@@ -26,13 +25,65 @@ fun main() {
     println()
     NonEmptyListDemo.demo()
     println()
+    ListKDemo.demo()
+    println()
+    MapKDemo.demo()
+
+}
+
+/***
+ * MapK is an Arrow wrapper over Kotlin `Map type`.
+ */
+object MapKDemo {
+    fun demo() {
+        creation()
+        operation()
+    }
+
+    private fun operation() {
+
+        println("# Basic operations of mapK")
+        val sampleMapK = mapOf("one" to 1, "two" to 2).k()
+        val transformMapK: MapK<String, Int> = sampleMapK.map { entryValue -> entryValue.plus(10) }
+        println("tranformation using map : $sampleMapK to $transformMapK")
+    }
+
+    fun creation(){
+        println("# Creating a  mapK type")
+        val mapK1: MapK<String, Int> = mapOf("one" to 1, "two" to 2).k()
+        println(" map using extension `k()` : $mapK1")
+        val mapK2:  MapK<String, Int> = MapK(mapOf("one" to 1, "two" to 2))
+        println(" map using constructor `MapK()` : $mapK2")
+    }
 }
 
 /***
  * ListK wraps over the platform `List` datatype
  */
-object ListDemo{
+object ListKDemo {
+    fun demo() {
+        println("# --- ArrowKt-ListK-type-examples ---")
+        creation()
+        operation()
+    }
 
+    fun creation() {
+        println("# Creating a  list")
+        val platformList = listOf(1, 3, 4, 5, 8)
+        val listwithKTX = platformList.k()
+        val listArrow = ListK(platformList)
+        println(" list using extension `k()` : $listwithKTX")
+        println(" list using `ListK()` : $listArrow")
+    }
+
+    fun operation() {
+        println("# basic listK operations")
+        val platformList = listOf(1, 3, 4, 5, 8)
+        val listwithKTX = platformList.k()
+        val listArrow = ListK(platformList)
+        val merged = listwithKTX.combineK(listArrow)
+        println("merging list : $merged")
+    }
 }
 
 /**
@@ -64,8 +115,8 @@ object NonEmptyListDemo {
         println("twised the item using mao on list : $twiced")
 
         val strangerThings = twiced.flatMap { twiceItem ->
-            listOfItems.map { listItem->
-                    listItem - twiceItem
+            listOfItems.map { listItem ->
+                listItem - twiceItem
             }
         }
         println("flatmap action $strangerThings")
