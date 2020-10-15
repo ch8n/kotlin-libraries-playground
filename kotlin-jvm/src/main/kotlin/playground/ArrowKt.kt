@@ -28,6 +28,19 @@ fun main() {
     ListKDemo.demo()
     println()
     MapKDemo.demo()
+    println()
+    EvalDemo.demo()
+
+}
+
+/***
+ * Eval is a monad which controls evaluation of a value
+ */
+object EvalDemo {
+    fun demo() {
+
+
+    }
 
 }
 
@@ -41,18 +54,28 @@ object MapKDemo {
     }
 
     private fun operation() {
-
         println("# Basic operations of mapK")
         val sampleMapK = mapOf("one" to 1, "two" to 2).k()
         val transformMapK: MapK<String, Int> = sampleMapK.map { entryValue -> entryValue.plus(10) }
-        println("tranformation using map : $sampleMapK to $transformMapK")
+        println("transformation using map : $sampleMapK to $transformMapK")
+
+        val foldLeft: Int = sampleMapK.foldLeft(0) { acc, item ->
+            item + acc
+        }
+        println("transformation using foldLeft : $sampleMapK to $foldLeft")
+
+        val foldRight: Eval<String> = sampleMapK.foldRight(Eval.just("one")) { entry, eval ->
+            Eval.just("$entry ${eval.value()}")
+        }
+        println("transformation using foldLefy : $sampleMapK to $foldRight")
+
     }
 
-    fun creation(){
+    fun creation() {
         println("# Creating a  mapK type")
         val mapK1: MapK<String, Int> = mapOf("one" to 1, "two" to 2).k()
         println(" map using extension `k()` : $mapK1")
-        val mapK2:  MapK<String, Int> = MapK(mapOf("one" to 1, "two" to 2))
+        val mapK2: MapK<String, Int> = MapK(mapOf("one" to 1, "two" to 2))
         println(" map using constructor `MapK()` : $mapK2")
     }
 }
